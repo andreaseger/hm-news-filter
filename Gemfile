@@ -13,9 +13,7 @@ gem 'redis'
 gem 'activesupport'
 gem 'i18n'
 
-group :production do
-  gem 'rpm_contrib'
-end
+gem 'rpm_contrib'
 
 group :development do
   gem 'sinatra-reloader'

@@ -3,3 +3,4 @@
 config/deploy.rb
 config/newrelic.yml
 env.rb
+log/**/*
