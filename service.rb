@@ -44,8 +44,9 @@ class Service < Sinatra::Base
   end
 
   get '/' do
-    interesting_teachers = /#{%w(kirchulla fischermax sochergudrun koehlerklaus petersgeorg lindermeierrobert).join('|')}/
-    @news = get_news interesting_teachers
+    #lvh.me/?teacher=kirchulla fischermax sochergudrun koehlerklaus petersgeorg lindermeierrobert
+    t = params[:teacher]
+    @news = get_news /#{t.split.join '|'}/
     haml :news
   end
 

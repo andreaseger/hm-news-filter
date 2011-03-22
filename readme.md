@@ -5,8 +5,16 @@ Just a little service to get the news from the bulletin board of [HM](hm.edu/) i
 
 Installation
 ----
+
     $ bundle install
-    $ ruby service
+    $ ruby service.rb
+
+Usage
+---
+
+    lvh.me/?teacher=just some teachers
+
+This now only shows news with the teacher attribute 'just','some' or 'teachers'
 
 Meta
 ----
