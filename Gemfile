@@ -11,6 +11,7 @@ gem 'hiredis'
 gem 'redis'
 
 gem 'activesupport'
+gem 'i18n'
 
 group :development do
   gem 'sinatra-reloader'
