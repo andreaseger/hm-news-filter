@@ -37,6 +37,8 @@
     %h1
       Customized Bulletin Board
     %div{:role=>"main"}
+      %form{:action => "/", :method => "get", :id => "search"}
+        %input{:type => "text", :name => "teacher", :value => "#{teacher}"}
       = yield
     #footer
       Eger Andreas | Source at

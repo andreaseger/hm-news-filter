@@ -1,12 +1,8 @@
 require 'rubygems'
+require 'env'
 require 'sinatra/base'
-require "sinatra/reloader"# unless :production
-require 'net/http'
-require 'nokogiri'
-require 'haml'
-require 'rdiscount'
-
-require 'iconv'
+require "sinatra/reloader" unless ENV['RACK_ENV'] == 'production'
+require 'lib/all'
 
 class Service < Sinatra::Base
   configure do |c|
@@ -23,36 +19,40 @@ class Service < Sinatra::Base
     @ic ||= Iconv.new('UTF-8','iso-8859-1')
   end
 
-
   def get_news(interesting_teachers)
     url='http://sol.cs.hm.edu/fi/rest/public/news.xml'
     xml = Net::HTTP.get_response(URI.parse(url)).body
 
     doc = Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
-    teachers = doc.css 'teacher'
-    by_interesting_teachers = teachers.find_all { |node| node.text =~ interesting_teachers }
-    interesting_news = by_interesting_teachers.map { |e| e.parent }
+    by_teachers = doc.css('teacher').find_all { |node| node.text =~ interesting_teachers }
+    interesting_news = by_teachers.map { |e| e.parent }
 
-    news = interesting_news.map{ |n|
-      {:subject => n.at_css('subject').to_str,
-       :text =>  n.at_css('text').to_str,
-       :teacher =>  n.at_css('teacher').to_str
-      }
-    }
+    news = interesting_news.map{ |n| Hash.from_xml(n.to_s)['news']}
   end
 
   def get_dozent(dozent)
-    url="http://sol.cs.hm.edu/fi/rest/public/person/name/#{dozent}.xml"
-    xml = Net::HTTP.get_response(URI.parse(url)).body
-    doc = Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
-    "#{doc.at_css('title').to_str} #{doc.at_css('firstname').to_str} #{doc.at_css('lastname').to_str}"
+    return nil unless dozent
+    d = DB.get("prof:#{dozent}")
+    unless d.nil?
+      return d
+    else
+      url="http://sol.cs.hm.edu/fi/rest/public/person/name/#{dozent}.xml"
+      xml = Net::HTTP.get_response(URI.parse(url)).body
+      p = Hash.from_xml(ic.iconv(xml))['person']
+      name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
+      DB.set "prof:#{dozent}", name
+      DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
+      name
+    end
   end
 
   get '/' do
     #lvh.me/?teacher=kirchulla fischermax sochergudrun koehlerklaus petersgeorg lindermeierrobert
     t = params[:teacher]
-    @news = get_news /#{t.split.join '|'}/
-    haml :news
+    if t && !t.empty?
+      @news = get_news(/#{t.split.join '|'}/)
+    end
+    haml :news, :locals => {:teacher => params[:teacher]}
   end
 
   app_file = "service.rb"

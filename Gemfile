@@ -7,6 +7,11 @@ gem 'haml'
 gem 'rdiscount'
 gem 'iconv'
 
+gem 'hiredis'
+gem 'redis'
+
+gem 'activesupport'
+
 group :development do
   gem 'sinatra-reloader'
   gem 'capistrano'
