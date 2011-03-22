@@ -22,6 +22,7 @@ GEM
     haml (3.0.25)
     highline (1.6.1)
     hirb (0.4.0)
+    iconv (0.1)
     monkey-lib (0.5.4)
       backports
     net-scp (1.0.4)
@@ -62,6 +63,7 @@ DEPENDENCIES
   compass-susy-plugin
   haml
   hirb
+  iconv
   nokogiri
   rdiscount
   sinatra

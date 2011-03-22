@@ -6,7 +6,7 @@ require 'nokogiri'
 require 'haml'
 require 'rdiscount'
 
-require 'ap'
+require 'iconv'
 
 class Service < Sinatra::Base
   configure do |c|
@@ -19,11 +19,16 @@ class Service < Sinatra::Base
     register Sinatra::Reloader
   end
 
+  def ic
+    @ic ||= Iconv.new('UTF-8','iso-8859-1')
+  end
+
 
   def get_news(interesting_teachers)
     url='http://sol.cs.hm.edu/fi/rest/public/news.xml'
     xml = Net::HTTP.get_response(URI.parse(url)).body
-    doc = Nokogiri::XML(xml.force_encoding('iso-8859-1').encode('utf-8'))
+
+    doc = Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
     teachers = doc.css 'teacher'
     by_interesting_teachers = teachers.find_all { |node| node.text =~ interesting_teachers }
     interesting_news = by_interesting_teachers.map { |e| e.parent }
@@ -39,7 +44,7 @@ class Service < Sinatra::Base
   def get_dozent(dozent)
     url="http://sol.cs.hm.edu/fi/rest/public/person/name/#{dozent}.xml"
     xml = Net::HTTP.get_response(URI.parse(url)).body
-    doc = Nokogiri::XML(xml.force_encoding('iso-8859-1').encode('utf-8'))
+    doc = Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
     "#{doc.at_css('title').to_str} #{doc.at_css('firstname').to_str} #{doc.at_css('lastname').to_str}"
   end
 

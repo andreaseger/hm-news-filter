@@ -5,6 +5,7 @@ gem 'sinatra'
 gem 'nokogiri'
 gem 'haml'
 gem 'rdiscount'
+gem 'iconv'
 
 group :development do
   gem 'sinatra-reloader'
