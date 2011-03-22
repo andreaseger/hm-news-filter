@@ -13,6 +13,10 @@ gem 'redis'
 gem 'activesupport'
 gem 'i18n'
 
+group :production do
+  gem 'rpm_contrib'
+end
+
 group :development do
   gem 'sinatra-reloader'
   gem 'capistrano'
