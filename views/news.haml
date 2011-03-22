@@ -1,0 +1,11 @@
+%ul
+  -@news.each do |n|
+    %li
+      %strong.subject
+        =n[:subject]
+      %em.teacher
+        %a{:href=>"http://sol.cs.hm.edu/fi/rest/public/person/name/#{n[:teacher]}"}
+          = get_dozent n[:teacher]
+      .text
+        -foo = n[:text].gsub(/#/,"").gsub(/\n\n|\n/,"<br />")
+        =RDiscount.new(foo).to_html

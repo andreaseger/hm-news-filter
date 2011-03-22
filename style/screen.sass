@@ -1,0 +1,82 @@
+//** SCREEN STYLES **//
+
+// Imports --------------------------------------------------------------
+
+@import defaults
+@import compass/utilities
+// Layout --------------------------------------------------------------
+
++susy
+
+// change '.container' to match your HTML container element
+// or @extend it to apply multiple containers on your site.
+#container
+  +container
+  //+show-grid("grid.png")
+  //*
+    background-color: rgba(0,0,0,.125)
+
+h1
+  +full
+  +prefix(1)
+  +leader(1,25px)
+  +trailer(1,25px)
+
+a
+  &:focus
+    outline: none
+
+div[role="main"]
+  p
+    margin-bottom: 5px
+  li
+    +no-bullets
+    +trailer(1,25px)
+    .text
+      margin-left: 1em
+
+footer
+  +full
+  +pad(3,3)
+
+.clear
+  clear: both
+  height: 0
+  overflow: hidden
+
+
+
+@media all and (orientation:portrait)
+
+@media all and (orientation:landscape)
+
+@media screen and (max-device-width: 480px)
+
+@media print
+  *
+    background: transparent !important
+    color: #444 !important
+    text-shadow: none !important
+  a, a:visited
+    color: #444 !important
+    text-decoration: underline
+  a:after
+    content: " (" attr(href) ")"
+  abbr:after
+    content: " (" attr(title) ")"
+  .ir a:after
+    content: ""
+  pre, blockquote
+    border: 1px solid #999
+    page-break-inside: avoid
+  thead
+    display: table-header-group
+  tr, img
+    page-break-inside: avoid
+  @page
+    margin: 0.5cm
+  p, h2, h3
+    orphans: 3
+    widows: 3
+  h2, h3
+    page-break-after: avoid
