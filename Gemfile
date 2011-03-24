@@ -14,7 +14,7 @@ gem 'activesupport'
 gem 'i18n'
 
 gem 'newrelic_rpm'
-#gem 'rpm_contrib'
+gem 'rpm_contrib'
 
 group :development do
   gem 'sinatra-reloader'

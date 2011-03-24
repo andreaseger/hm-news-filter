@@ -2,6 +2,7 @@ require 'rubygems'
 require 'env'
 require 'sinatra/base'
 require "sinatra/reloader" unless ENV['RACK_ENV'] == 'production'
+require 'rpm_contrib' if ENV['RACK_ENV'] == 'production'
 require 'newrelic_rpm' if ENV['RACK_ENV'] == 'production'
 require 'lib/all'
 
