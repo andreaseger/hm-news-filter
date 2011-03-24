@@ -7,14 +7,17 @@
         %em.teacher
           %a{:href=>"http://sol.cs.hm.edu/fi/rest/public/person/name/#{n['teacher']}"}
             = get_dozent n['teacher']
-        - if n['text']
-          .text
-            -tmp = n['text'].gsub(/#/,"").gsub(/\n\n|\n/,"<br />")
-            =RDiscount.new(tmp).to_html
+        .text
+          = n['text']
+        -#%small
+          gültig bis
+          =n['expire'].strftime '%B %d, %Y'
 - else
   #help
     %h3
       Usage:
     %code
       Just search in the box above for relevant teachers
+    %br
+    %a{:href=>"/?teacher=_all_"}show all news
       

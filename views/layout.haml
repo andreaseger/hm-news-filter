@@ -40,10 +40,15 @@
         %input{:type => "text", :name => "teacher", :value => "#{teacher}"}
       = yield
     #footer
-      Eger Andreas | Source at
-      %a{:rel=>"source", :href=>"https://github.com/sch1zo/hm-news-filter"}
-        GitHub
-      | Content from 
-      %a{:href=>"http://sol.cs.hm.edu/fi/rest/public/news"}
-        Hochschule München
+      %ul
+        %li
+          Eger Andreas
+        %li
+          Source:
+          %a{:rel=>"source", :href=>"https://github.com/sch1zo/hm-news-filter"}
+            GitHub
+        %li
+          Content:
+          %a{:href=>"http://sol.cs.hm.edu/fi/rest/public/news"}
+            Hochschule München
       

@@ -1,4 +1,4 @@
-hm-new-filter
+hm-news-filter
 =====
 
 Just a little service to get the news from the bulletin board of [HM](hm.edu/) in a nicer way.
@@ -6,15 +6,41 @@ Just a little service to get the news from the bulletin board of [HM](hm.edu/) i
 Installation
 ----
 
+Dependencies are managed trough bundler
+
     $ bundle install
-    $ ruby service.rb
+
+Database
+----
+
+hm-news-filter will connect to Redis on localhost on the default port. You can specify an other setup if you set REDIS_URL in your environment, i.e.:
+
+    $ REDIS_URL='redis://:secret@1.2.3.4:9000/3' ruby service.rb
+
+This would connect to host 1.2.3.4 on port 9000, uses database number 3 using the password 'secret'.
+
 
 Usage
 ---
 
-    lvh.me/?teacher=just some teachers
+Start the server via
+
+    $ ruby service.rb
+
+or
+
+    $ rackup -p4567
+
+and go to
+
+    localhost:4567/?teacher=just some teachers
 
 This now only shows news with the teacher attribute 'just','some' or 'teachers'
+
+Problems
+----
+
+- I absolutly cant figure out witch markup language is used, think I will have to ask the University
 
 Meta
 ----

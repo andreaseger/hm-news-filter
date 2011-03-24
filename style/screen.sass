@@ -17,8 +17,7 @@
     background-color: rgba(0,0,0,.125)
 
 h1
-  +full
-  +prefix(2)
+  +pad(0.7,0.7)
   +leader(1,25px)
   +trailer(1,25px)
 
@@ -27,26 +26,32 @@ a
     outline: none
 
 div[role="main"]
-  p
-    margin-bottom: 5px
-  li
-    +no-bullets
-    +trailer(1,25px)
-    .text
-      margin-left: 1em
+  ul
+    margin:
+      left: 1em
+      right: 1em
+      bottom: 0.5em
+    li
+      //+no-bullets
+      +trailer(1,25px)
+      .text
+        margin-left: 0.6em
+        li
+          margin-bottom: 0
+          
   #help
     +prefix(1) 
     .mono
       background-color: rgba(0,0,0,.125)
 
-footer
-  +full
-  +pad(3,3)
-
-.clear
-  clear: both
-  height: 0
-  overflow: hidden
+#footer
+  +pad(1,1)
+  border-top:
+    style: solid
+    color: black
+    width: 1px
+  ul
+    +no-bullets
 
 
 
@@ -55,6 +60,11 @@ footer
 @media all and (orientation:landscape)
 
 @media screen and (max-device-width: 480px)
+
+@media screen and (min-device-width: 600px)
+#footer
+  ul
+    +horizontal-list
 
 @media print
   *

@@ -1,7 +1,6 @@
 require 'rubygems'
 require 'env'
 require 'rpm_contrib'
-require 'newrelic_rpm'
 require 'sinatra/base'
 require "sinatra/reloader" unless ENV['RACK_ENV'] == 'production'
 require 'lib/all'
@@ -17,19 +16,32 @@ class Service < Sinatra::Base
     register Sinatra::Reloader
   end
 
+  def cache_page(seconds=30*60)
+    response['Cache-Control'] = "public, max-age=#{seconds}" unless :development
+  end
+
   def ic
     @ic ||= Iconv.new('UTF-8','iso-8859-1')
   end
 
-  def get_news(interesting_teachers)
+  def fetch_and_parse_news
     url='http://sol.cs.hm.edu/fi/rest/public/news.xml'
     xml = Net::HTTP.get_response(URI.parse(url)).body
 
-    doc = Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
+    Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
+  end
+
+  def get_all_news
+    doc = fetch_and_parse_news
+    doc.css('news').map{ |n| Hash.from_xml(n.to_s)['news']}
+  end
+
+  def get_news(interesting_teachers)
+    doc = fetch_and_parse_news
     by_teachers = doc.css('teacher').find_all { |node| node.text =~ interesting_teachers }
     interesting_news = by_teachers.map { |e| e.parent }
 
-    news = interesting_news.map{ |n| Hash.from_xml(n.to_s)['news']}
+    interesting_news.map{ |n| Hash.from_xml(n.to_s)['news']}
   end
 
   def get_dozent(dozent)
@@ -48,13 +60,34 @@ class Service < Sinatra::Base
     end
   end
 
+  def parseText(text)
+    text.gsub!(/#/,"")
+    text.gsub!(/\n\s*\.\s*\n/,"\n\n")
+    text.gsub!(/\n+\s*\./,"\n\n- ")
+    RDiscount.new(text).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>')
+  end
+
   get '/' do
+    cache_page
     #lvh.me/?teacher=kirchulla fischermax sochergudrun koehlerklaus petersgeorg lindermeierrobert
     t = params[:teacher]
     if t && !t.empty?
-      @news = get_news(/#{t.split.join '|'}/)
+      if t == '_all_'
+        @news = get_all_news
+        t = ''
+      else
+        @news = get_news(/#{t.downcase.split.join '|'}/)
+      end
+      @news.each_with_index do |n,i|
+        n['expire']=Time.local(*(n['expire'].split('-')))
+        n['publish']=Time.local(*(n['publish'].split('-')))
+        #n['text'] = RDiscount.new(parseText(n['text'])).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>') unless n['text'].nil?
+        n['text'] = parseText(n['text']) unless n['text'].nil?
+      end
+      #@news.map!{|n| e=Time.local(*(n['expire'].split('-'))) }
+      @news.sort!{|a,b| a['expire'] <=> b['expire']}
     end
-    haml :news, :locals => {:teacher => params[:teacher]}
+    haml :news, :locals => {:teacher => t}
   end
 
   app_file = "service.rb"
