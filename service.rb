@@ -1,8 +1,8 @@
 require 'rubygems'
 require 'env'
-require 'rpm_contrib'
 require 'sinatra/base'
 require "sinatra/reloader" unless ENV['RACK_ENV'] == 'production'
+require 'newrelic_rpm' if ENV['RACK_ENV'] == 'production'
 require 'lib/all'
 
 class Service < Sinatra::Base

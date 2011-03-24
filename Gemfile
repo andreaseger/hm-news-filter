@@ -13,7 +13,8 @@ gem 'redis'
 gem 'activesupport'
 gem 'i18n'
 
-gem 'rpm_contrib'
+gem 'newrelic_rpm'
+#gem 'rpm_contrib'
 
 group :development do
   gem 'sinatra-reloader'
