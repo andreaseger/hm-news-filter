@@ -30,7 +30,14 @@
  
   -#<!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects  -->
   -#%script{:src=>"/js/modernizr-1.7.min.js"}
-
+  %script{:type=>"text/javascript"}
+    (function() {
+        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
+        s.type = 'text/javascript';
+        s.async = true;
+        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
+        t.parentNode.insertBefore(s, t);
+    })();
 %body
   #container
     %h1
@@ -53,13 +60,3 @@
           Content:
           %a{:href=>"http://sol.cs.hm.edu/fi/rest/public/news"}
             Hochschule München
-      
-  %script{:type=>"text/javascript"}
-    :cdata
-      (function() {
-          var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-          s.type = 'text/javascript';
-          s.async = true;
-          s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
-          t.parentNode.insertBefore(s, t);
-      })();
