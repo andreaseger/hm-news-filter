@@ -17,8 +17,8 @@
     background-color: rgba(0,0,0,.125)
 
 h1
-  +pad(0.7,0.7)
-  +leader(1,25px)
+  +pad(2,2)
+  +leader(3,25px)
   +trailer(1,25px)
 
 a
@@ -26,6 +26,8 @@ a
     outline: none
 
 div[role="main"]
+  #search
+    +pad(0.2,0.2)
   ul
     margin:
       left: 1em
@@ -52,19 +54,48 @@ div[role="main"]
     width: 1px
   ul
     +no-bullets
+#github
+  left: -65px
+  height: 30px
+  top: 40px
+  position: absolute
+  text-decoration: none
+  width: 250px
+  @include rotate(-45deg)
+  span 
+    background: black
+    color: white
+    font-size: 14px
+    left: 0
+    padding: 5px 0
+    position: absolute
+    text-align: center
+    width: 250px
+    @include box-shadow(rgba(black, 0.2) 1px 1px 10px)
+    // If you’re using Compass < 0.11 use this:
+    // @include box-shadow(rgba(black, 0.2), 1px, 1px, 10px);
+    @include transition(opacity, 1s)
+    &:last-child 
+      /* this is the backside */
+      background: blue
+      opacity: 0
+  &:hover span 
+    &:first-child 
+      opacity: 0
+    &:last-child 
+      opacity: 1
 
+@media all and (min-width: 560px)
+  #footer
+    ul
+      +horizontal-list
 
-
-@media all and (orientation:portrait)
-
-@media all and (orientation:landscape)
-
-@media screen and (max-device-width: 480px)
-
-@media screen and (min-device-width: 600px)
-#footer
-  ul
-    +horizontal-list
+@media all and (max-width: 480px)
+  h1
+    +pad(0.5,0.5)
+    +leader(1,25px)
+  #github
+    visibility: hidden
 
 @media print
   *

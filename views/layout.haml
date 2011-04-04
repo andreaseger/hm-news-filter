@@ -30,14 +30,7 @@
  
   -#<!-- All JavaScript at the bottom, except for Modernizr which enables HTML5 elements & feature detects  -->
   -#%script{:src=>"/js/modernizr-1.7.min.js"}
-  :javascript
-    (function() {
-        var s = document.createElement('script'), t = document.getElementsByTagName('script')[0];
-        s.type = 'text/javascript';
-        s.async = true;
-        s.src = 'http://api.flattr.com/js/0.6/load.js?mode=auto';
-        t.parentNode.insertBefore(s, t);
-    })();
+
 %body
   #container
     %h1
@@ -51,12 +44,16 @@
         %li
           Eger Andreas
         %li
-          %a{:class=>"FlattrButton", :style=>"display:none;", :rev=>"flattr;button:compact;", :href=>"http://hm.eger-andreas.de"}
+          %a{:href=>"http://flattr.com/thing/155386/Schwarzes-Brett-Hochschule-Munchen", :target=>"_blank"}
+            %img{:src=>"http://api.flattr.com/button/flattr-badge-large.png", :alt=>"Flattr this", :title=>"Flattr this", :border=>"0"}
         %li
-          Source:
-          %a{:rel=>"source", :href=>"https://github.com/sch1zo/hm-news-filter"}
-            GitHub
+          %a{:href=>"http://www.twitter.com/sch1zo"}
+            %img{:src=>"http://twitter-badges.s3.amazonaws.com/twitter-c.png", :alt=>"Follow sch1zo on Twitter"}
         %li
-          Content:
           %a{:href=>"http://sol.cs.hm.edu/fi/rest/public/news"}
             Hochschule München
+%a{:id=>"github", :href=>"https://github.com/sch1zo"}
+  %span
+    Fork me on GitHub...
+  %span
+    and get the source!

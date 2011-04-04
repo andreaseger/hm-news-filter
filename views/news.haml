@@ -1,4 +1,4 @@
-- if @news
+- unless @news.nil? || @news.empty?
   %ul
     -@news.each do |n|
       %li
@@ -13,6 +13,9 @@
           gültig bis
           =n['expire'].strftime '%B %d, %Y'
 - else
+  -if @news
+    %em
+      no new notifications for the given teachers available
   #help
     %h3
       Usage:
