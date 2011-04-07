@@ -91,6 +91,10 @@ class Service < Sinatra::Base
     haml :news, :locals => {:teacher => t}
   end
 
+  get '/piwik-opt-out' do
+    '<iframe frameborder="no" width="600px" height="200px" src="http://stats.eger-andreas.de/index.php?module=CoreAdminHome&action=optOut"></iframe>'
+  end
+
   app_file = "service.rb"
   run! if app_file == $0
 end
