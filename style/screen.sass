@@ -2,11 +2,15 @@
 
 // Imports --------------------------------------------------------------
 
+@import base
 @import defaults
 @import compass/utilities
+@import compass/css3/transform
+@import compass/css3/box-shadow
+@import compass/css3/transition
 // Layout --------------------------------------------------------------
 
-+susy
+//+susy
 
 // change '.container' to match your HTML container element
 // or @extend it to apply multiple containers on your site.
@@ -36,6 +40,8 @@ div[role="main"]
     li
       //+no-bullets
       +trailer(1,25px)
+      .teacher
+        margin-right: 0.3em
       .text
         margin-left: 0.6em
         li

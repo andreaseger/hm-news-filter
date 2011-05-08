@@ -20,6 +20,8 @@ group :development do
   gem 'sinatra-reloader'
   gem 'capistrano'
   
+  gem 'ruby-debug'
+
   gem 'compass'
   gem 'compass-susy-plugin'
 

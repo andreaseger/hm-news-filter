@@ -6,6 +6,7 @@ require 'rpm_contrib' if ENV['RACK_ENV'] == 'production'
 require 'newrelic_rpm' if ENV['RACK_ENV'] == 'production'
 require 'lib/all'
 
+
 class Service < Sinatra::Base
   configure do |c|
     set :public, File.dirname(__FILE__) + '/public'
@@ -26,10 +27,11 @@ class Service < Sinatra::Base
   end
 
   def fetch_and_parse_news
-    url='http://sol.cs.hm.edu/fi/rest/public/news.xml'
+    url='http://fi.cs.hm.edu/fi/rest/public/news.xml'
     xml = Net::HTTP.get_response(URI.parse(url)).body
 
-    Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
+    Nokogiri::XML(xml)#.force_encoding('iso-8859-1').encode('utf-8'))
+    #Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
   end
 
   def get_all_news
@@ -47,17 +49,20 @@ class Service < Sinatra::Base
 
   def get_dozent(dozent)
     return nil unless dozent
+
     d = DB.get("prof:#{dozent}")
     unless d.nil?
       return d
     else
-      url="http://sol.cs.hm.edu/fi/rest/public/person/name/#{dozent}.xml"
+      url="http://fi.cs.hm.edu/fi/rest/public/person/name/#{dozent}.xml"
       xml = Net::HTTP.get_response(URI.parse(url)).body
-      p = Hash.from_xml(ic.iconv(xml))['person']
+
+      p = Hash.from_xml(xml)['person']
+      #p = Hash.from_xml(ic.iconv(xml))['person']
       name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
       DB.set "prof:#{dozent}", name
       DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
-      name
+      return name
     end
   end
 
