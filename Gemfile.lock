@@ -12,6 +12,7 @@ GEM
       net-ssh (>= 2.0.14)
       net-ssh-gateway (>= 1.1.0)
     chunky_png (1.1.2)
+    columnize (0.3.2)
     compass (0.11.1)
       chunky_png (~> 1.1)
       fssm (>= 0.2.7)
@@ -25,6 +26,7 @@ GEM
     hiredis (0.3.1)
     i18n (0.5.0)
     iconv (0.1)
+    linecache (0.43)
     monkey-lib (0.5.4)
       backports
     net-scp (1.0.4)
@@ -41,6 +43,11 @@ GEM
     redis (2.2.0)
     rpm_contrib (1.0.13)
       newrelic_rpm (>= 2.13.1)
+    ruby-debug (0.10.4)
+      columnize (>= 0.1)
+      ruby-debug-base (~> 0.10.4.0)
+    ruby-debug-base (0.10.4)
+      linecache (>= 0.3)
     sass (3.1.1)
     sinatra (1.2.6)
       rack (~> 1.1)
@@ -79,6 +86,7 @@ DEPENDENCIES
   rdiscount
   redis
   rpm_contrib
+  ruby-debug
   sinatra
   sinatra-reloader
   sketches
