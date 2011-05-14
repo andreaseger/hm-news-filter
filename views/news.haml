@@ -1,3 +1,4 @@
+test
 - unless @news.nil? || @news.empty?
   %ul
     -@news.each do |n|
@@ -8,11 +9,11 @@
           - n['teacher'].each do |d|
             %em.teacher
               %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{d}"}
-                =h(get_dozent(d))
+                =get_dozent d
         -else
           %em.teacher
             %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{n['teacher']}"}
-              = h(get_dozent(n['teacher']))
+              = get_dozent n['teacher']
         .text
           = n['text']
         -#%small

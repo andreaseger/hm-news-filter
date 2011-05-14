@@ -17,9 +17,6 @@ class Service < Sinatra::Base
   configure :development do |c|
     register Sinatra::Reloader
   end
-  
-  include Rack::Utils
-  alias_method :h, :escape_html
 
   def cache_page(seconds=30*60)
     response['Cache-Control'] = "public, max-age=#{seconds}" unless :development
@@ -53,7 +50,7 @@ class Service < Sinatra::Base
   def get_dozent(dozent)
     return nil unless dozent
 
-    d = DB.get("prof:#{dozent}")
+    d = nil#DB.get("prof:#{dozent}")
     unless d.nil?
       return d
     else
@@ -63,8 +60,8 @@ class Service < Sinatra::Base
       p = Hash.from_xml(xml)['person']
       #p = Hash.from_xml(ic.iconv(xml))['person']
       name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
-      DB.set "prof:#{dozent}", name
-      DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
+      #DB.set "prof:#{dozent}", name
+      #DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
       return name
     end
   end
