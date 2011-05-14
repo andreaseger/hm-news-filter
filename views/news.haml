@@ -1,10 +1,9 @@
-test
 - unless @news.nil? || @news.empty?
   %ul
     -@news.each do |n|
       %li
         %strong.subject
-          =h(n['subject'])
+          =n['subject']
         -if n['teacher'].class == [].class
           - n['teacher'].each do |d|
             %em.teacher
