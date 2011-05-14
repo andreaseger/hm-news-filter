@@ -1,10 +1,10 @@
-require 'rubygems'
-require 'env'
+#require 'rubygems'
+require_relative 'env'
 require 'sinatra/base'
 require "sinatra/reloader" unless ENV['RACK_ENV'] == 'production'
 require 'rpm_contrib' if ENV['RACK_ENV'] == 'production'
 require 'newrelic_rpm' if ENV['RACK_ENV'] == 'production'
-require 'lib/all'
+require_relative 'lib/all'
 
 
 class Service < Sinatra::Base
@@ -22,9 +22,9 @@ class Service < Sinatra::Base
     response['Cache-Control'] = "public, max-age=#{seconds}" unless :development
   end
 
-  def ic
-    @ic ||= Iconv.new('UTF-8','iso-8859-1')
-  end
+#  def ic
+#    @ic ||= Iconv.new('UTF-8','iso-8859-1')
+#  end
 
   def fetch_and_parse_news
     url='http://fi.cs.hm.edu/fi/rest/public/news.xml'

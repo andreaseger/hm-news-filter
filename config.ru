@@ -1,2 +1,2 @@
-require 'service'
+require './service'
 run Service

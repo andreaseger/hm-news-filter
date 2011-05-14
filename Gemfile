@@ -5,7 +5,9 @@ gem 'sinatra'
 gem 'nokogiri'
 gem 'haml'
 gem 'rdiscount'
-gem 'iconv'
+#gem 'iconv'
+
+gem 'require_relative'
 
 gem 'hiredis'
 gem 'redis'
@@ -20,7 +22,7 @@ group :development do
   gem 'sinatra-reloader'
   gem 'capistrano'
   
-  gem 'ruby-debug'
+  #gem 'ruby-debug'
 
   gem 'compass'
   gem 'compass-susy-plugin'
