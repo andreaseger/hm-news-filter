@@ -3,16 +3,16 @@
     -@news.each do |n|
       %li
         %strong.subject
-          =n['subject']
+          =h(n['subject'])
         -if n['teacher'].class == [].class
           - n['teacher'].each do |d|
             %em.teacher
               %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{d}"}
-                = get_dozent d
+                =h(get_dozent(d))
         -else
           %em.teacher
             %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{n['teacher']}"}
-              = get_dozent n['teacher']
+              = h(get_dozent(n['teacher']))
         .text
           = n['text']
         -#%small

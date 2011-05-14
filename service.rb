@@ -17,6 +17,9 @@ class Service < Sinatra::Base
   configure :development do |c|
     register Sinatra::Reloader
   end
+  
+  include Rack::Utils
+  alias_method :h, :escape_html
 
   def cache_page(seconds=30*60)
     response['Cache-Control'] = "public, max-age=#{seconds}" unless :development
