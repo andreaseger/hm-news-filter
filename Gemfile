@@ -11,6 +11,7 @@ gem 'rdiscount'
 
 gem 'hiredis'
 gem 'redis'
+gem 'SystemTimer'
 
 gem 'activesupport'
 gem 'i18n'

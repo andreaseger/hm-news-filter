@@ -1,6 +1,7 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    SystemTimer (1.2.3)
     activesupport (3.0.8)
     awesome_print (0.4.0)
     backports (2.2.1)
@@ -62,6 +63,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  SystemTimer
   activesupport
   awesome_print
   bond

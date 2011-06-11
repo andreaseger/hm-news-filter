@@ -4,6 +4,7 @@ require 'haml'
 require 'rdiscount'
 require 'iconv'
 
+require 'system_timer'
 require 'hiredis'
 require 'redis'
 
