@@ -7,7 +7,7 @@ gem 'haml'
 gem 'rdiscount'
 #gem 'iconv'
 
-gem 'require_relative'
+#gem 'require_relative'
 
 gem 'hiredis'
 gem 'redis'

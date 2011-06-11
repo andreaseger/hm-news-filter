@@ -1,10 +1,10 @@
-#require 'rubygems'
-require_relative 'env'
+require 'rubygems'
+require 'env'
 require 'sinatra/base'
 require "sinatra/reloader" unless ENV['RACK_ENV'] == 'production'
 require 'rpm_contrib' if ENV['RACK_ENV'] == 'production'
 require 'newrelic_rpm' if ENV['RACK_ENV'] == 'production'
-require_relative 'lib/all'
+require 'lib/all'
 
 
 class Service < Sinatra::Base
@@ -50,7 +50,7 @@ class Service < Sinatra::Base
   def get_dozent(dozent)
     return nil unless dozent
 
-    d = nil#DB.get("prof:#{dozent}")
+    d = DB.get("prof:#{dozent}")
     unless d.nil?
       return d
     else
@@ -60,8 +60,8 @@ class Service < Sinatra::Base
       p = Hash.from_xml(xml)['person']
       #p = Hash.from_xml(ic.iconv(xml))['person']
       name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
-      #DB.set "prof:#{dozent}", name
-      #DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
+      DB.set "prof:#{dozent}", name
+      DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
       return name
     end
   end
