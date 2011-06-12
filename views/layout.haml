@@ -23,6 +23,7 @@
   %link{:rel=>"icon", :type=>"image/x-icon", :href=>"http://w3-mediapool.hm.edu/mediapool/media/_technik/img/_technik_1/favicon.ico", :media=>"screen"}
 
   -# CSS : implied media="all"
+  %link{:rel=>"stylesheet", :href=>"http://fonts.googleapis.com/css?family=Inconsolate|EB+Garamond|Cabin:regular,regularitalic,bold"}
   %link{:rel=>"stylesheet", :href=>"/css/screen.css"}
 
   -# Uncomment if you are specifically targeting less enabled mobile browsers
@@ -42,24 +43,23 @@
     #footer
       %ul
         %li
-          Eger Andreas
-        %li
           %a{:href=>"http://flattr.com/thing/155386/Schwarzes-Brett-Hochschule-Munchen", :target=>"_blank"}
             %img{:src=>"http://api.flattr.com/button/flattr-badge-large.png", :alt=>"Flattr this", :title=>"Flattr this", :border=>"0"}
         %li
           %a{:href=>"http://www.twitter.com/sch1zo"}
             %img{:src=>"http://twitter-badges.s3.amazonaws.com/twitter-c.png", :alt=>"Follow sch1zo on Twitter"}
         %li
+          %a{:href=>"http://github.com/sch1zo", :target=>"_blank"}
+            Eger Andreas
+        %li
           %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/news"}
             Hochschule München
         %li
+          %a{:href=>"http://www.rubini.us", :target=>"_blank"}
+            Rubinius
+        %li.small
           %a{:href=>"/piwik-opt-out", :target => "_blank"}
             Piwik Opt-Out
-  %a{:id=>"github", :href=>"https://github.com/sch1zo"}
-    %span
-      Fork me on GitHub...
-    %span
-      and get the source!
   :plain
     <!-- Piwik --> 
     <script type="text/javascript">

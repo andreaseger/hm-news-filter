@@ -40,7 +40,7 @@ html
 // Body --------------------------------------------------------------
 
 body
-  @extend .serif
+  @extend .sans
   color: $base
 
 // Selected Text --------------------------------------------------------------
@@ -79,11 +79,13 @@ a
 
 h2, h3, h4, h5, h6
   +trailer
+  @extend .serif
 
 h1
   +adjust-font-size-to(21px)
   +trailer(1, 21px)
   @extend .allcaps
+  @extend .serif
 
 //h2
   @extend .allcaps  
