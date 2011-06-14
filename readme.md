@@ -10,6 +10,8 @@ Dependencies are managed trough bundler
 
     $ bundle install
 
+Add a file env.rb to the root dir, for dev an empty one will do(its for stuff like Database settings)
+
 Database
 ----
 
