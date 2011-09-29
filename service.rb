@@ -101,8 +101,8 @@ class Service < Sinatra::Base
       end
       if success
         @news.each_with_index do |n,i|
-          n['expire']=Time.local(*(n['expire'].split('-')))
-          n['publish']=Time.local(*(n['publish'].split('-')))
+          #n['expire']=Time.local(*(n['expire'].split('-')))
+          #n['publish']=Time.local(*(n['publish'].split('-')))
           #n['text'] = RDiscount.new(parseText(n['text'])).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>') unless n['text'].nil?
           #n['text'] = parseText(n['text']) unless n['text'].nil?
           n['text'] = markdown(n['text']) unless n['text'].nil?
