@@ -1,6 +1,7 @@
 .rvmrc
 .sass-cache/**/*
 config/deploy.rb
+config/unicorn.rb
 config/newrelic.yml
 env.rb
 log/**/*

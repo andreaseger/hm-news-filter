@@ -9,6 +9,7 @@ gem 'redcarpet'
 
 gem 'hiredis'
 gem 'redis'
+gem 'unicorn'
 
 gem 'activesupport'
 gem 'i18n'
