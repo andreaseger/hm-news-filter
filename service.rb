@@ -20,7 +20,7 @@ class Service < Sinatra::Base
     register Sinatra::Reloader
   end
 
-  def cache_page(seconds=30*60)
+  def cache_page(seconds=60*60)
     response['Cache-Control'] = "public, max-age=#{seconds}" unless :development
   end
 
@@ -66,7 +66,6 @@ class Service < Sinatra::Base
       xml = Net::HTTP.get_response(URI.parse(url)).body
 
       p = Hash.from_xml(xml)['person']
-      #p = Hash.from_xml(ic.iconv(xml))['person']
       name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
       DB.set "prof:#{dozent}", name
       DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
@@ -74,12 +73,12 @@ class Service < Sinatra::Base
     end
   end
 
-  def parseText(text)
-    text.delete! '#'
-    text.gsub!(/\n\s*\.\s*\n/,"\n\n")
-    text.gsub!(/\n+\s*\./,"\n\n- ")
-    RDiscount.new(text).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>')
-  end
+#  def parseText(text)
+#    text.delete! '#'
+#    text.gsub!(/\n\s*\.\s*\n/,"\n\n")
+#    text.gsub!(/\n+\s*\./,"\n\n- ")
+#    RDiscount.new(text).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>')
+#  end
 
   def markdown(text)
     text.delete! '#'
@@ -100,11 +99,9 @@ class Service < Sinatra::Base
         success, @news = get_news(/#{t.downcase.split.join '|'}/)
       end
       if success
-        @news.each_with_index do |n,i|
+        @news.each do |n,i|
           #n['expire']=Time.local(*(n['expire'].split('-')))
           #n['publish']=Time.local(*(n['publish'].split('-')))
-          #n['text'] = RDiscount.new(parseText(n['text'])).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>') unless n['text'].nil?
-          #n['text'] = parseText(n['text']) unless n['text'].nil?
           n['text'] = markdown(n['text']) unless n['text'].nil?
         end
         #@news.map!{|n| e=Time.local(*(n['expire'].split('-'))) }
