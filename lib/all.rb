@@ -1,10 +1,9 @@
 require 'net/http'
 require 'nokogiri'
 require 'haml'
-require 'rdiscount'
-require 'iconv'
+#require 'rdiscount'
+require 'redcarpet'
 
-require 'system_timer'
 require 'hiredis'
 require 'redis'
 

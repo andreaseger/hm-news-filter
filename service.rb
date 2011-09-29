@@ -1,10 +1,12 @@
-require 'rubygems'
-require 'env'
+require './env'
 require 'sinatra/base'
-require "sinatra/reloader" unless ENV['RACK_ENV'] == 'production'
-require 'rpm_contrib' if ENV['RACK_ENV'] == 'production'
-require 'newrelic_rpm' if ENV['RACK_ENV'] == 'production'
-require 'lib/all'
+if ENV['RACK_ENV'] == 'production'
+  require 'rpm_contrib'
+  require 'newrelic_rpm'
+else
+  require "sinatra/reloader"
+end
+require './lib/all'
 
 
 class Service < Sinatra::Base
@@ -67,10 +69,17 @@ class Service < Sinatra::Base
   end
 
   def parseText(text)
-    text.gsub!(/#/,"")
+    text.delete! '#'
     text.gsub!(/\n\s*\.\s*\n/,"\n\n")
     text.gsub!(/\n+\s*\./,"\n\n- ")
     RDiscount.new(text).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>')
+  end
+
+  def markdown(text)
+    text.delete! '#'
+    text.gsub! /^\s*\./, ''
+    options = [:hard_wrap, :filter_html, :autolink, :no_intraemphasis, :tables]
+    Redcarpet.new(text, *options).to_html
   end
 
   get '/' do
@@ -88,7 +97,8 @@ class Service < Sinatra::Base
         n['expire']=Time.local(*(n['expire'].split('-')))
         n['publish']=Time.local(*(n['publish'].split('-')))
         #n['text'] = RDiscount.new(parseText(n['text'])).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>') unless n['text'].nil?
-        n['text'] = parseText(n['text']) unless n['text'].nil?
+        #n['text'] = parseText(n['text']) unless n['text'].nil?
+        n['text'] = markdown(n['text']) unless n['text'].nil?
       end
       #@news.map!{|n| e=Time.local(*(n['expire'].split('-'))) }
       @news.sort!{|a,b| a['expire'] <=> b['expire']}
