@@ -1,27 +1,33 @@
-- unless @news.nil? || @news.empty?
-  %ul
-    -@news.each do |n|
-      %li
-        %strong.subject
-          =n['subject']
-        -if n['teacher'].class == [].class
-          - n['teacher'].each do |d|
+- if success
+  - unless @news.nil? || @news.empty?
+    %ul
+      -@news.each do |n|
+        %li
+          %strong.subject
+            =n['subject']
+          -if n['teacher'].class == [].class
+            - n['teacher'].each do |d|
+              %em.teacher
+                %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{d}"}
+                  =get_dozent d
+          -else
             %em.teacher
-              %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{d}"}
-                =get_dozent d
-        -else
-          %em.teacher
-            %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{n['teacher']}"}
-              = get_dozent n['teacher']
-        .text
-          = n['text']
-        -#%small
-          gültig bis
-          =n['expire'].strftime '%B %d, %Y'
+              %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{n['teacher']}"}
+                = get_dozent n['teacher']
+          .text
+            = n['text']
+          -#%small
+            gültig bis
+            =n['expire'].strftime '%B %d, %Y'
+  - else
+    -if @news
+      %em
+        no new notifications for the given teachers available
 - else
-  -if @news
-    %em
-      no new notifications for the given teachers available
+  %em
+    = @news
+
+- if !success || @news.empty?
   #help
     %h3
       Usage:

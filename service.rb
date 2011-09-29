@@ -24,29 +24,35 @@ class Service < Sinatra::Base
     response['Cache-Control'] = "public, max-age=#{seconds}" unless :development
   end
 
-#  def ic
-#    @ic ||= Iconv.new('UTF-8','iso-8859-1')
-#  end
-
   def fetch_and_parse_news
     url='http://fi.cs.hm.edu/fi/rest/public/news.xml'
-    xml = Net::HTTP.get_response(URI.parse(url)).body
+    xml=''
+    begin
+      Timeout::timeout(5) do
+        xml = Net::HTTP.get_response(URI.parse(url)).body
+      end
+    rescue
+      return false, "Could not fetch data from #{url} in time. I guess thier servers are pretty slow right now. Try accessing the board directly, link is in the footer."
+    end
 
-    Nokogiri::XML(xml)#.force_encoding('iso-8859-1').encode('utf-8'))
-    #Nokogiri::XML(ic.iconv(xml))#.force_encoding('iso-8859-1').encode('utf-8'))
+    return true, Nokogiri::XML(xml)
   end
 
   def get_all_news
-    doc = fetch_and_parse_news
-    doc.css('news').map{ |n| Hash.from_xml(n.to_s)['news']}
+    success, doc = fetch_and_parse_news
+    return doc.css('news').map{ |n| Hash.from_xml(n.to_s)['news']} if success
+    return success, doc
   end
 
   def get_news(interesting_teachers)
-    doc = fetch_and_parse_news
-    by_teachers = doc.css('teacher').find_all { |node| node.text =~ interesting_teachers }
-    interesting_news = by_teachers.map { |e| e.parent }
+    success, doc = fetch_and_parse_news
+    if success
+      by_teachers = doc.css('teacher').find_all { |node| node.text =~ interesting_teachers }
+      interesting_news = by_teachers.map { |e| e.parent }
 
-    interesting_news.map{ |n| Hash.from_xml(n.to_s)['news']}
+      return success, interesting_news.map{ |n| Hash.from_xml(n.to_s)['news']}
+    end
+    return success, doc
   end
 
   def get_dozent(dozent)
@@ -88,22 +94,24 @@ class Service < Sinatra::Base
     t = params[:teacher]
     if t && !t.empty?
       if t == '_all_'
-        @news = get_all_news
+        success, @news = get_all_news
         t = ''
       else
-        @news = get_news(/#{t.downcase.split.join '|'}/)
+        success, @news = get_news(/#{t.downcase.split.join '|'}/)
       end
-      @news.each_with_index do |n,i|
-        n['expire']=Time.local(*(n['expire'].split('-')))
-        n['publish']=Time.local(*(n['publish'].split('-')))
-        #n['text'] = RDiscount.new(parseText(n['text'])).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>') unless n['text'].nil?
-        #n['text'] = parseText(n['text']) unless n['text'].nil?
-        n['text'] = markdown(n['text']) unless n['text'].nil?
+      if success
+        @news.each_with_index do |n,i|
+          n['expire']=Time.local(*(n['expire'].split('-')))
+          n['publish']=Time.local(*(n['publish'].split('-')))
+          #n['text'] = RDiscount.new(parseText(n['text'])).to_html.gsub(/<li><p>(.*)<\/p><\/li>/, '<li>\1</li>') unless n['text'].nil?
+          #n['text'] = parseText(n['text']) unless n['text'].nil?
+          n['text'] = markdown(n['text']) unless n['text'].nil?
+        end
+        #@news.map!{|n| e=Time.local(*(n['expire'].split('-'))) }
+        @news.sort!{|a,b| a['expire'] <=> b['expire']}
       end
-      #@news.map!{|n| e=Time.local(*(n['expire'].split('-'))) }
-      @news.sort!{|a,b| a['expire'] <=> b['expire']}
     end
-    haml :news, :locals => {:teacher => t}
+    haml :news, :locals => {:teacher => t, :success => success}
   end
 
   get '/piwik-opt-out' do
