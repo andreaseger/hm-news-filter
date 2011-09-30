@@ -11,15 +11,17 @@ gem 'hiredis'
 gem 'redis'
 gem 'unicorn'
 
-gem 'activesupport'
+gem 'activesupport', :require => 'active_support/core_ext'
 gem 'i18n'
 
-gem 'newrelic_rpm'
-gem 'rpm_contrib'
+group :production do
+  gem 'newrelic_rpm'
+end
 
 group :development do
-  gem 'sinatra-reloader'
+  gem 'sinatra-reloader', :require => 'sinatra/reloader'
   gem 'capistrano'
   gem 'compass'
   gem 'compass-susy-plugin'
+  gem 'pry'
 end

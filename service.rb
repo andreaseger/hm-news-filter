@@ -1,13 +1,4 @@
-require './env'
-require 'sinatra/base'
-if ENV['RACK_ENV'] == 'production'
-  require 'rpm_contrib'
-  require 'newrelic_rpm'
-else
-  require "sinatra/reloader"
-end
-require './lib/all'
-
+require 'net/http'
 
 class Service < Sinatra::Base
   configure do |c|
@@ -22,6 +13,10 @@ class Service < Sinatra::Base
 
   def cache_page(seconds=60*60)
     response['Cache-Control'] = "public, max-age=#{seconds}" unless :development
+  end
+
+  def database
+    @database ||= Redis.new(REDIS_CONFIG)
   end
 
   def fetch_and_parse_news
@@ -40,7 +35,7 @@ class Service < Sinatra::Base
 
   def get_all_news
     success, doc = fetch_and_parse_news
-    return doc.css('news').map{ |n| Hash.from_xml(n.to_s)['news']} if success
+    return success, doc.css('news').map{ |n| Hash.from_xml(n.to_s)['news']} if success
     return success, doc
   end
 
@@ -58,7 +53,7 @@ class Service < Sinatra::Base
   def get_dozent(dozent)
     return nil unless dozent
 
-    d = DB.get("prof:#{dozent}")
+    d = database.get("prof:#{dozent}")
     unless d.nil?
       return d
     else
@@ -67,8 +62,8 @@ class Service < Sinatra::Base
 
       p = Hash.from_xml(xml)['person']
       name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
-      DB.set "prof:#{dozent}", name
-      DB.expire "prof:#{dozent}", 60*60*24 #delete keys after one day
+      database.set "prof:#{dozent}", name
+      database.expire "prof:#{dozent}", 60*60*24*3 #delete keys after three day
       return name
     end
   end
@@ -100,11 +95,10 @@ class Service < Sinatra::Base
       end
       if success
         @news.each do |n,i|
-          #n['expire']=Time.local(*(n['expire'].split('-')))
+          n['expire']=Time.local(*(n['expire'].split('-')))
           #n['publish']=Time.local(*(n['publish'].split('-')))
           n['text'] = markdown(n['text']) unless n['text'].nil?
         end
-        #@news.map!{|n| e=Time.local(*(n['expire'].split('-'))) }
         @news.sort!{|a,b| a['expire'] <=> b['expire']}
       end
     end
