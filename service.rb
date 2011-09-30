@@ -55,7 +55,7 @@ class Service < Sinatra::Base
 
     d = database.get("prof:#{dozent}")
     unless d.nil?
-      return d
+      return d.force_encoding("UTF-8")
     else
       url="http://fi.cs.hm.edu/fi/rest/public/person/name/#{dozent}.xml"
       xml = Net::HTTP.get_response(URI.parse(url)).body
