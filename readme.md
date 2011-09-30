@@ -1,7 +1,7 @@
 hm-news-filter
 =====
 
-Just a little service to get the news from the bulletin board of [HM](hm.edu/) in a nicer way.
+Just a little service to get the news from the bulletin board of [HM](http://www.hm.edu/) in a nicer way.
 
 Installation
 ----
