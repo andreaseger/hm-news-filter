@@ -96,10 +96,10 @@ class Service < Sinatra::Base
       if success
         @news.each do |n,i|
           n['expire']=Time.local(*(n['expire'].split('-')))
-          #n['publish']=Time.local(*(n['publish'].split('-')))
+          n['publish']=Time.local(*(n['publish'].split('-')))
           n['text'] = markdown(n['text']) unless n['text'].nil?
         end
-        @news.sort!{|a,b| a['expire'] <=> b['expire']}
+        @news.sort!{|a,b| a['publish'] <=> b['publish']}.reverse!
       end
     end
     haml :news, :locals => {:teacher => t, :success => success}

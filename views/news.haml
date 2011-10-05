@@ -17,9 +17,9 @@
                 = get_dozent n['teacher']
           .text
             = n['text']
-          -#%small
-            gültig bis
-            =n['expire'].strftime '%B %d, %Y'
+          %small
+            published:
+            =n['publish'].strftime '%B %d, %Y'
   - else
     -if @news
       %em
