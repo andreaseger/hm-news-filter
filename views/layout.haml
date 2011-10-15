@@ -8,57 +8,47 @@
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 %head
   %meta{:charset=>"utf-8"}
-
-  %meta{:"http-equiv"=>"X-UA-Compatible", :content=>"IE=edge,chrome=1"}
-
+  %meta{:content => "IE=edge,chrome=1", "http-equiv" => "X-UA-Compatible"}
   %title
-    = "Schwarzes Brett Hochschule München"
-  %meta{:name=>"description", :content=>"Schwarzes Brett Hochschule München"}
+    = section(:title)
+  %meta{:name=>"description", :content=>"services for Hochschule München"}
   %meta{:name=>"viewport", :content=>"width=device-width, initial-scale=1.0"}
 
   %link{:rel=>"shortcut icon", :type=>"image/x-icon", :href=>"http://w3-mediapool.hm.edu/mediapool/media/_technik/img/_technik_1/favicon.ico", :media=>"screen"}
   %link{:rel=>"icon", :type=>"image/x-icon", :href=>"http://w3-mediapool.hm.edu/mediapool/media/_technik/img/_technik_1/favicon.ico", :media=>"screen"}
 
   %link{:rel=>"stylesheet", :href=>"http://fonts.googleapis.com/css?family=Inconsolate|EB+Garamond|Cabin:regular,regularitalic,bold"}
-  %link{:rel=>"stylesheet", :href=>"/css/screen.css"}
+  %link{:rel=>"stylesheet", :href=>"/assets/css/screen.css"}
 
 %body
   #container
-    %h1
-      Schwarzes Brett Hochschule München
-      %br
-      Fakultät 07 Informatik und Mathematik
+    %header
+      - if show_title?
+        %h1
+          Hochschule München
+          %br
+          = section(:title)
+    - ['error', 'notice'].each do |name|
+      - unless (flash[name].nil? || flash[name].empty?)
+        %div{:id => "flash_#{name}"}=flash[name]
     %div{:role=>"main"}
-      %form{:action => "/", :method => "get", :id => "search"}
-        %input{:type => "text", :name => "teacher", :value => "#{teacher}"}
       = yield
-    #footer
+    %footer
       %ul
         %li
-          %a{:href=>"http://flattr.com/thing/155386/Schwarzes-Brett-Hochschule-Munchen", :target=>"_blank"}
-            %img{:src=>"http://api.flattr.com/button/flattr-badge-large.png", :alt=>"Flattr this", :title=>"Flattr this", :border=>"0"}
+          = section(:footer)
         %li
-          %a{:href=>"http://www.twitter.com/sch1zo"}
+          = section(:flattr)
+        %li
+          %a{:href=>"http://www.twitter.com/sch1zo", :rel=>"nofollow", :target=>"_blank"}
             %img{:src=>"http://twitter-badges.s3.amazonaws.com/twitter-c.png", :alt=>"Follow sch1zo on Twitter"}
         %li
-          %a{:href=>"http://github.com/sch1zo", :target=>"_blank"}
+          %a{:href=>"http://github.com/sch1zo", :rel=>"nofollow", :target=>"_blank"}
             Eger Andreas
         %li
-          %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/news"}
+          %a{:href=>"/rooms/update", :rel=>"nofollow"}
+            Update Data
+        %li
+          %a{:href=>"http://fi.cs.hm.edu", :rel=>"nofollow", :target=>"_blank"}
             Hochschule München
-        %li.small
-          %a{:href=>"/piwik-opt-out", :target => "_blank"}
-            Piwik Opt-Out
-  :plain
-    <!-- Piwik --> 
-    <script type="text/javascript">
-      var pkBaseURL = (("https:" == document.location.protocol) ? "https://stats.eger-andreas.de/" : "http://stats.eger-andreas.de/");
-      document.write(unescape("%3Cscript src='" + pkBaseURL + "piwik.js' type='text/javascript'%3E%3C/script%3E"));
-    </script><script type="text/javascript">
-      try {
-        var piwikTracker = Piwik.getTracker(pkBaseURL + "piwik.php", 1);
-        piwikTracker.trackPageView();
-        piwikTracker.enableLinkTracking();
-    } catch( err ) {}
-    </script><noscript><p><img src="http://stats.eger-andreas.de/piwik.php?idsite=1" style="border:0" alt="" /></p></noscript>
-    <!-- End Piwik Tracking Code -->
+  %script{:src => 'http://api.flattr.com/js/0.6/load.js?mode=auto' }

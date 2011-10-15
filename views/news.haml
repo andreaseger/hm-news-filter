@@ -1,38 +1,37 @@
-﻿-# encoding: utf-8
-- if success
-  - unless @news.nil? || @news.empty?
-    %ul
-      -@news.each do |n|
-        %li
-          %strong.subject
-            =n['subject']
-          -if n['teacher'].class == [].class
-            - n['teacher'].each do |d|
-              %em.teacher
-                %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{d}"}
-                  =get_dozent d
-          -else
-            %em.teacher
-              %a{:href=>"http://fi.cs.hm.edu/fi/rest/public/person/name/#{n['teacher']}"}
-                = get_dozent n['teacher']
-          .text
-            = n['text']
-          %small
-            published:
-            =n['publish'].strftime '%B %d, %Y'
-  - else
-    -if @news
-      %em
-        no new notifications for the given teachers available
-- else
-  %em
-    = @news
+﻿-title "Schwarzes Brett FK07"
 
-- if !success || @news.empty?
+%form{:action => url("/"), :method => "get", :id => "search"}
+  %input{:type => "text", :name => "teacher", :value => "#{teacher}"}
+
+- if @news.nil? && (teacher.nil? || teacher.empty?)
   #help
     %h3
       Usage:
     %code
       Just search in the box above for relevant teachers
     %br
-    %a{:href=>"/?teacher=_all_"}show all news
+    %a{:href=>url("/?teacher=_all_")}show all news
+
+- elsif @news.nil? || @news.empty?
+  %em
+    no new notifications for the given teachers available
+
+-else
+  %ul
+    -@news.each do |n|
+      %li
+        %strong.subject
+          =n[:subject]
+        - unless n[:teacher].nil?
+          - n[:teacher].each do |t|
+            %em.teacher
+              %a{:href=>"#{t[:link]}"}
+                = t[:name]
+        .text
+          = n[:text]
+        %small
+          = "published: #{n[:publish].strftime('%B %d, %Y')}" unless n[:publish].nil?
+
+
+- flattr('news')
+- section(:footer) { "<a href='/rooms'>Room Search</a>" }

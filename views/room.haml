@@ -1,0 +1,18 @@
+-title "Raum Suche"
+
+- if @rooms == false ||  @room.nil? || @rooms.empty?
+  #help
+    %h3
+      Usage:
+    %code
+      Enter a search query above like this: "[building]-[floor]"
+    %br
+-else
+  %ul
+    - @rooms.compact.sort.each do |room|
+      %li= room
+%form{:action => url("/"), :method => "get", :id => "search"}
+  %input{:type => "text", :name => "search", :value => "#{search}"}
+
+- flattr('news')
+- section(:footer) { "<a href='/news'>Schwazes Brett</a>" }

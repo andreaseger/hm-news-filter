@@ -15,4 +15,8 @@ else
 end
 
 require './service'
-run Service
+run Rack::URLMap.new({
+    "/" => Default,
+    "/news" => News,
+    "/rooms" => Rooms
+})

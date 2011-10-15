@@ -1,13 +1,12 @@
 # A sample Gemfile
 source "http://rubygems.org"
 
-gem 'sinatra'
-gem 'nokogiri'
+gem 'sinatra', :require => 'sinatra/base'
 gem 'haml'
+gem 'rack-flash'
 gem 'redcarpet'
-#gem 'rdiscount'
 
-gem 'hiredis'
+gem 'nokogiri'
 gem 'redis'
 gem 'unicorn'
 
@@ -16,12 +15,18 @@ gem 'i18n'
 
 group :production do
   gem 'newrelic_rpm'
+  gem 'hiredis'
 end
 
 group :development do
   gem 'sinatra-reloader', :require => 'sinatra/reloader'
   gem 'capistrano'
+
   gem 'compass'
   gem 'compass-susy-plugin'
+  gem 'rb-inotify'
+  gem 'guard-compass'
+  gem 'guard-livereload'
+
   gem 'pry'
 end
