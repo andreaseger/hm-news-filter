@@ -39,9 +39,9 @@ class Rooms < SharedSinatra
     s, data = fetch_and_parse_data('http://fi.cs.hm.edu/fi/rest/public/timetable/room.xml')
     if s
       save_to_database(data)
-      flash[:notice] = "Room data updated successfully"
+      flash[:db_notice] = "Room data updated successfully"
     else
-      flash[:error] = data
+      flash[:db_error] = data
     end
   end
 
@@ -86,6 +86,8 @@ class Rooms < SharedSinatra
 
   get '/' do
     clear_flash
+    flash[:notice] = flash[:db_notice]
+    flash[:error] = flash[:db_error]
     cache_page
     search = params[:search] || ""
     building, floor = search.split '-'
@@ -109,7 +111,7 @@ class Rooms < SharedSinatra
 
   def self.new(*)
     app = Rack::Auth::Digest::MD5.new(super) do |username|
-      {'foo' => 'bar'}[username]
+      {'sch1zo' => ENV['HM_ROOMS_SECRET']}[username]
     end
     app.realm = 'Room Search'
     app.opaque = 'secretkey'

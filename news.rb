@@ -55,7 +55,7 @@ class News < SharedSinatra
         @news.map! do |n|
           {
             expire: Time.local(*(n.xpath('expire').children.text.split('-'))),
-            publish: Time.local(*(n.xpath('expire').children.text.split('-'))),
+            publish: Time.local(*(n.xpath('publish').children.text.split('-'))),
             text: markdown(n.xpath('text').children.text),
             subject: n.xpath('subject').children.text,
             teacher: n.xpath('teacher').map do |t|
