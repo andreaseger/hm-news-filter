@@ -1,7 +1,8 @@
-hm-news-filter
+hm-services
 =====
 
-Just a little service to get the news from the bulletin board of [HM](http://www.hm.edu/) in a nicer way.
+Just a  few little services for the University of Applied Science Munich.
+at the moment there is a nice search for the news in the bulletin board and a room search to quickly get a place for your study group.
 
 Installation
 ----
@@ -27,22 +28,17 @@ Usage
 
 Start the server via
 
-    $ ruby service.rb
-
-or
-
-    $ rackup -p4567
+    rackup -p4567
 
 and go to
 
-    localhost:4567/?teacher=just some teachers
+    localhost:4567/
 
-This now only shows news with the teacher attribute 'just','some' or 'teachers'
 
 Problems
 ----
 
-- I absolutly cant figure out witch markup language is used, think I will have to ask the University
+- I absolutly cant figure out witch markup language is used,
 
 Meta
 ----
