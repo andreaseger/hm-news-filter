@@ -18,5 +18,6 @@ require './service'
 run Rack::URLMap.new({
     "/" => Default,
     "/news" => News,
-    "/rooms" => Rooms
+    "/rooms" => Rooms,
+    "/mensa" => Mensa
 })

@@ -16,22 +16,17 @@ class Rooms < SharedSinatra
       }
     end
 
-    data.compact!
-
-    data.each do |room|
-      database.multi do
+    data.compact.each do |room|
         if room[:bookings]
           room[:bookings].each do |booking|
             #TODO find a nicer format for the timeslots
-            database.sadd room[:name], booking.to_json
-            database.sadd booking.to_json, room[:name]
+            database.sadd "rooms:#{room[:name]}", booking.to_json
+            database.sadd "rooms:#{booking.to_json}", room[:name]
           end
         end
 
-        database.sadd room[:building], room[:name]
-        database.sadd room[:floor], room[:name]
-        database.sadd "#{room[:building]}.#{room[:floor]}", room[:name]
-      end
+        database.sadd "rooms:#{room[:building]}", room[:name]
+        database.sadd "rooms:#{room[:building]}#{room[:floor]}", room[:name]
     end
   end
 
@@ -73,12 +68,12 @@ class Rooms < SharedSinatra
     timeslot = get_current_timeslot
     return false, "only works monday-friday between 8:00 and 18:30" unless timeslot
     filter_rooms = if floor
-                     database.smembers "#{building}.#{floor}"
+                     database.smembers "rooms:#{building}#{floor}"
                    else
-                     database.smembers building
+                     database.smembers "rooms:#{building}"
                    end
     rooms = filter_rooms.map do |room|
-      room unless database.smembers(room).include? timeslot.to_json
+      room unless database.smembers("rooms:#{room}", timeslot.to_json)
     end
 
     return rooms, "Rooms for Timeslot: #{timeslot.join(' ')} | Building: #{building} | Floor: #{floor}"
@@ -92,7 +87,7 @@ class Rooms < SharedSinatra
     search = params[:search] || ""
     building, floor = search.split '-'
     logger.info "building: #{building} | floor: #{floor}"
-    if building && !building.empty?
+    unless building.nil? || building.empty?
       @rooms, message = get_rooms building, floor
     end
     if @rooms
@@ -101,7 +96,7 @@ class Rooms < SharedSinatra
       flash[:error] = message
     end
 
-    haml :room, locals: {search: search }
+    haml :room, locals: {search: search, current: :rooms }
   end
 
   get '/update' do

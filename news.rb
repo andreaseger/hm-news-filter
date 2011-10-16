@@ -1,5 +1,5 @@
 class News < SharedSinatra
-  def get_news(teachers=nil)
+  def get_news(teachers=/.*/)
     success, data = fetch_and_parse_data('http://fi.cs.hm.edu/fi/rest/public/news.xml')
     if success
       if teachers
@@ -41,14 +41,13 @@ class News < SharedSinatra
   get '/' do
     clear_flash
     cache_page
-    #lvh.me/?teacher=kirchulla fischermax sochergudrun koehlerklaus petersgeorg lindermeierrobert
-    t = params[:teacher]
-    if t && !t.empty?
-      if t == '_all_'
-        @news, message = get_news /.*/
-        t = ''
+    search = params[:search] || ''
+    unless search.empty?
+      if search == '_all_'
+        @news, message = get_news 
+        search = ''
       else
-        @news, message = get_news(/#{t.downcase.split.join '|'}/)
+        @news, message = get_news(/#{search.downcase.split.join '|'}/)
       end
       if @news
         flash[:notice] = message
@@ -69,6 +68,6 @@ class News < SharedSinatra
         flash[:error] = message
       end
     end
-    haml :news, locals: {teacher: t}
+    haml :news, locals: {search: search, current: :news}
   end
 end

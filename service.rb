@@ -28,13 +28,18 @@ class SharedSinatra < Sinatra::Base
     xml=''
     begin
       Timeout::timeout(5) do
-        xml = Net::HTTP.get_response(URI.parse(url)).body
+        net = Net::HTTP.get_response(URI.parse(url))
+        return false, "HTTP Error: #{net.code}" if %w(404 500).include? net.code
+        xml = net.body
       end
     rescue
       logger.error "Could not fetch data from #{url}"
       return false, "Could not fetch data from #{url} in time. I guess thier servers are pretty slow right now. Try accessing the board directly, link is in the footer."
     end
 
+    if url =~ /\.html/
+      return true, Nokogiri::HTML(xml)
+    end
     return true, Nokogiri::XML(xml)
   end
 end
@@ -47,3 +52,4 @@ end
 
 require_relative 'news'
 require_relative 'rooms'
+require_relative 'mensa'
