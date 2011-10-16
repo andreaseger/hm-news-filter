@@ -2,7 +2,11 @@ hm-services
 =====
 
 Just a  few little services for the University of Applied Science Munich.
-at the moment there is a nice search for the news in the bulletin board and a room search to quickly get a place for your study group.
+available services:
+
+- a nice search for the news in the bulletin board
+- a room search to quickly get a place for your study group
+- a current menu of the mensa
 
 Installation
 ----
