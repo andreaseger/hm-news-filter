@@ -1,45 +1,5 @@
 class Rooms < SharedSinatra
 
-  def save_to_database(xml)
-    #delete all old data before saving the new one
-    database.flushdb
-    logger.info "deleted all data from the database"
-
-    data=xml.xpath('./list/timetable').map do |t|
-      room = t.xpath('value').children.text
-      next if room.empty?
-      bookings = t.xpath('day/time/booking').map { |b| [ b.xpath('weekday').children.text, b.xpath('starttime').children.text] }
-      { name: room,
-        floor: room[1].to_i,
-        building: room[0],
-        bookings: bookings
-      }
-    end
-
-    data.compact.each do |room|
-        if room[:bookings]
-          room[:bookings].each do |booking|
-            #TODO find a nicer format for the timeslots
-            database.sadd "rooms:#{room[:name]}", booking.to_json
-            database.sadd "rooms:#{booking.to_json}", room[:name]
-          end
-        end
-
-        database.sadd "rooms:#{room[:building]}", room[:name]
-        database.sadd "rooms:#{room[:building]}#{room[:floor]}", room[:name]
-    end
-  end
-
-  def update_data
-    s, data = fetch_and_parse_data('http://fi.cs.hm.edu/fi/rest/public/timetable/room.xml')
-    if s
-      save_to_database(data)
-      flash[:db_notice] = "Room data updated successfully"
-    else
-      flash[:db_error] = data
-    end
-  end
-
   def get_current_timeslot
     time = Time.now
     w = %w(so mo di mi do fr sa)[time.strftime('%w').to_i]
@@ -73,16 +33,19 @@ class Rooms < SharedSinatra
                      database.smembers "rooms:#{building}"
                    end
     rooms = filter_rooms.map do |room|
-      room unless database.smembers("rooms:#{room}", timeslot.to_json)
+      room unless database.sismember("rooms:#{room}", timeslot.to_json)
     end
 
-    return rooms, "Rooms for Timeslot: #{timeslot.join(' ')} | Building: #{building} | Floor: #{floor}"
+    return rooms.compact, "Rooms for Timeslot: #{timeslot.join(' ')} | Building: #{building} | Floor: #{floor}"
   end
 
   get '/' do
     clear_flash
-    flash[:notice] = flash[:db_notice]
-    flash[:error] = flash[:db_error]
+    if session.has_key?(:db_notice) || session.has_key?(:db_error)
+      flash[:notice] = session[:db_notice]
+      flash[:error] = session[:db_error]
+      [:db_notice, :db_error].each {|s| session.delete(s)}
+    end
     cache_page
     search = params[:search] || ""
     building, floor = search.split '-'
@@ -90,6 +53,7 @@ class Rooms < SharedSinatra
     unless building.nil? || building.empty?
       @rooms, message = get_rooms building, floor
     end
+
     if @rooms
       flash[:notice] = message
     else
@@ -99,17 +63,4 @@ class Rooms < SharedSinatra
     haml :room, locals: {search: search, current: :rooms }
   end
 
-  get '/update' do
-    update_data
-    redirect to('/')
-  end
-
-  def self.new(*)
-    app = Rack::Auth::Digest::MD5.new(super) do |username|
-      {'sch1zo' => ENV['HM_ROOMS_SECRET']}[username]
-    end
-    app.realm = 'Room Search'
-    app.opaque = 'secretkey'
-    app
-  end
 end

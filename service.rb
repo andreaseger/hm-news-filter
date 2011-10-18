@@ -52,4 +52,5 @@ end
 
 require_relative 'news'
 require_relative 'rooms'
+require_relative 'secured'
 require_relative 'mensa'

@@ -2,12 +2,7 @@ class News < SharedSinatra
   def get_news(teachers=/.*/)
     success, data = fetch_and_parse_data('http://fi.cs.hm.edu/fi/rest/public/news.xml')
     if success
-      if teachers
-        return  data.xpath('./newslist/news').map{ |n|
-                  (n.xpath('teacher|author').children.text =~ teachers) ? n : nil
-                }.compact, ''
-      end
-      return data.xpath('./newslist/news'), ''
+      return  data.xpath('./newslist/news').map{ |n| (n.xpath('teacher|author').children.text =~ teachers) ? n : nil }.compact, ''
     end
     return false, data
   end
@@ -25,7 +20,7 @@ class News < SharedSinatra
       p = Hash.from_xml(xml)['person']
       name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
       database.set "prof:#{dozent}", name
-      database.expire "prof:#{dozent}", 60*60*24*3 #delete keys after three day
+      database.expire "prof:#{dozent}", 60*60*24*5 #delete keys after five day
       return name
     end
   end
@@ -44,7 +39,7 @@ class News < SharedSinatra
     search = params[:search] || ''
     unless search.empty?
       if search == '_all_'
-        @news, message = get_news 
+        @news, message = get_news
         search = ''
       else
         @news, message = get_news(/#{search.downcase.split.join '|'}/)
@@ -57,10 +52,7 @@ class News < SharedSinatra
             publish: Time.local(*(n.xpath('publish').children.text.split('-'))),
             text: markdown(n.xpath('text').children.text),
             subject: n.xpath('subject').children.text,
-            teacher: n.xpath('teacher').map do |t|
-              d=t.children.text
-              { link: "http://fi.cs.hm.edu/fi/rest/public/person/name/#{d}", name: get_dozent(d) }
-            end
+            teacher: n.xpath('teacher').map{ |t| d=t.children.text; { link: "http://fi.cs.hm.edu/fi/rest/public/person/name/#{d}", name: get_dozent(d) } }
           }
         end
         @news.sort!{|a,b| a[:publish] <=> b[:publish]}.reverse!

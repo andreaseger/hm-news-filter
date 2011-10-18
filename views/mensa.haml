@@ -1,21 +1,48 @@
--title "Mensa"
-
 - if @mensa == false ||  @mensa.nil? || @mensa.empty?
+  -title "Mensa"
   #help
     %h3
       Usage:
     %code
-      Enter a the mensa id. You can find it by going
+      %strong
+        Enter
+      the mensa id. You can find it by going
       %a{:href=>'http://www.studentenwerk-muenchen.de/mensa/speiseplan/index-de.html', :target=>'_blank', :rel=>'nofollow'}
         here
       selecting your mensa and look at the URL in your browser. The ID will be almost at the end of the URL.
       %br
       http://www.studentenwerk-muenchen.de/mensa/speiseplan/speiseplan_[[-ID-]]_-de.html
+      %br
+      %strong
+        or
+      use one of these links:
+    %ul
+      %li
+        %a{:href => "#{url("/")}?search=431"}
+          Lothstraße
+      %li
+        %a{:href => "#{url("/")}?search=422"}
+          Garching
     %br
 -else
-  %ul
+  -title @mensa[:mensa_name]
+  %ul#zusatzstoffe
+    - @mensa[:zusatzstoffe].each do |z|
+      %li
+        %span.token=z[0]
+        %span.label=z[1]
+  %ul#food
     - @mensa[:food].each do |food|
-      %li{:class => food[:meatless] && "meatless"}= food[:name]
+      - if food.count == 3
+        %li{:class => food[2] =~ /fleischlos/ && "vegetarian"}
+          %span.type=food[0]
+          %span.name=food[1]
+      - elsif
+        %li{:class => food[1] =~ /fleischlos/ && "vegetarian"}
+          %span.name=food[0]
+      - else
+        %li=food.inspect
+
 %form{:action => url("/"), :method => "get", :id => "search"}
   %input{:type => "text", :name => "search", :value => "#{search}"}
 

@@ -19,5 +19,6 @@ run Rack::URLMap.new({
     "/" => Default,
     "/news" => News,
     "/rooms" => Rooms,
+    "/update_rooms" => Secured,
     "/mensa" => Mensa
 })

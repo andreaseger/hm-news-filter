@@ -1,6 +1,6 @@
 -title "Raum Suche"
 
-- if @rooms == false ||  @room.nil? || @rooms.empty?
+- if @rooms == false ||  @rooms.nil? || @rooms.empty?
   #help
     %h3
       Usage:
@@ -9,9 +9,12 @@
     %br
 -else
   %ul
-    - @rooms.compact.sort.each do |room|
+    - @rooms.sort.each do |room|
       %li= room
+
 %form{:action => url("/"), :method => "get", :id => "search"}
   %input{:type => "text", :name => "search", :value => "#{search}"}
 
+%a{:href=>"/update_rooms", :rel=>"nofollow"}
+  Update Data
 - flattr('rooms')
