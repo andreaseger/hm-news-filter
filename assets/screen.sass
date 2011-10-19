@@ -61,25 +61,12 @@
       a
         color: black
     #zusatzstoffe
-      +columns(4)
-      +omega
       margin-left: 0
-      font-size: small
-      +border-radius(2px)
-      border: 2px solid #516572
-      .token
-        +columns(1,4)
-      .label
-        +columns(3,4)
-        +omega
     #food
-      +columns(8)
-      +alpha
       .type
-        +columns(3,8)
-        margin-left: 0
+        +columns(4,11)
       .name
-        +columns(5,8)
+        +columns(6,11)
         +omega
 
   footer
@@ -112,6 +99,32 @@
   footer
     ul
       +horizontal-list
+  #zusatzstoffe
+    display: inline
+    +columns(4)
+    +omega
+    margin-left: 0
+    font-size: small
+    +border-radius(2px)
+    border: 2px solid #516572
+    .token
+      +columns(1,4)
+    .label
+      +columns(3,4)
+      +omega
+  #food
+    +columns(8)
+    +alpha
+    .type
+      +columns(3,8)
+      margin-left: 0
+    .name
+      +columns(5,8)
+      +omega
+
+@media all and (max-width: 800px)
+  #zusatzstoffe
+    display: none
 @media all and (max-width: 480px)
   h1
     +pad(0.5,0.5)
