@@ -51,7 +51,7 @@ class Rooms < SharedSinatra
     building, floor = search.split '-'
     logger.info "building: #{building} | floor: #{floor}"
     unless building.nil? || building.empty?
-      @rooms, message = get_rooms building, floor
+      @rooms, message = get_rooms building.downcase, floor
     end
 
     if @rooms
