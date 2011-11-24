@@ -19,8 +19,8 @@
   %link{:href=>'http://fonts.googleapis.com/css?family=Poly|Chivo:400|Inconsolata', :rel=>'stylesheet'}
   %link{:rel=>"stylesheet", :href=>"/assets/css/screen.css"}
 
-  %script{:src => "assets/js/modernizr-latest.js"}
-
+  -#%script{:src => "assets/js/modernizr-latest.js"}
+  = NewRelic::Agent.browser_timing_header rescue ""
 %body
   #container
     %header
@@ -61,3 +61,5 @@
           %a{:href=>"http://www.studentenwerk-muenchen.de/mensa/speiseplan/index-de.html", :rel=>"nofollow", :target=>"_blank"}
             Studentenwerk München
   %script{:src => 'http://api.flattr.com/js/0.6/load.js?mode=auto' }
+
+  = NewRelic::Agent.browser_timing_footer rescue ""
