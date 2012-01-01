@@ -3,7 +3,7 @@ source "http://rubygems.org"
 
 gem 'sinatra', :require => 'sinatra/base'
 gem 'haml'
-gem 'rack-flash'
+gem 'sinatra-flash', :require => 'sinatra/flash'
 gem 'redcarpet'
 
 gem 'nokogiri'

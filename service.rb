@@ -1,16 +1,18 @@
 require_relative 'lib/helper'
 require 'net/http'
 require 'json'
+require 'sinatra/contrib'
 
 class SharedSinatra < Sinatra::Base
   configure do |c|
     helpers Sinatra::MyHelper
+    register Sinatra::Contrib
 
     set :public_folder, File.dirname(__FILE__) + '/public'
     set :haml, :format => :html5
 
     enable :sessions
-    use Rack::Flash
+    register Sinatra::Flash
 
     layout :layout
   end
