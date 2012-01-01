@@ -114,6 +114,7 @@ DEPENDENCIES
   redcarpet
   redis
   sinatra
+  sinatra-contrib
   sinatra-flash
   sinatra-reloader
   unicorn

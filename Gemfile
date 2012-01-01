@@ -2,8 +2,10 @@
 source "http://rubygems.org"
 
 gem 'sinatra', :require => 'sinatra/base'
-gem 'haml'
+gem 'sinatra-contrib', :require => 'sinatra/contrib'
 gem 'sinatra-flash', :require => 'sinatra/flash'
+gem 'haml'
+
 gem 'redcarpet'
 
 gem 'nokogiri'

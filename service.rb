@@ -1,7 +1,6 @@
 require_relative 'lib/helper'
 require 'net/http'
 require 'json'
-require 'sinatra/contrib'
 
 class SharedSinatra < Sinatra::Base
   configure do |c|
