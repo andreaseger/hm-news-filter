@@ -29,8 +29,7 @@ class News < SharedSinatra
     return if text.nil?
     text.delete! '#'
     text.gsub! /^\s*\./, ''
-    options = [:hard_wrap, :filter_html, :autolink, :no_intraemphasis, :tables]
-    Redcarpet.new(text, *options).to_html
+    md.render(text)
   end
 
   get '/' do
@@ -61,5 +60,9 @@ class News < SharedSinatra
       end
     end
     haml :news, locals: {search: search, current: :news}
+  end
+private
+  def md
+    @md ||= Redcarpet::Markdown.new(Redcarpet::Render::HTML, hard_wrap: true, filter_html: true, autolink: true, no_intra_emphasis: true, tables: true)
   end
 end

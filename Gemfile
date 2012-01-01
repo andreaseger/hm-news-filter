@@ -1,6 +1,8 @@
 # A sample Gemfile
 source "http://rubygems.org"
 
+gem 'rack', '~> 1.3.6'
+
 gem 'sinatra', :require => 'sinatra/base'
 gem 'sinatra-contrib', :require => 'sinatra/contrib'
 gem 'sinatra-flash', :require => 'sinatra/flash'
