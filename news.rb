@@ -15,13 +15,17 @@ class News < SharedSinatra
       return d.force_encoding("UTF-8")
     else
       url="http://fi.cs.hm.edu/fi/rest/public/person/name/#{dozent}.xml"
-      xml = Net::HTTP.get_response(URI.parse(url)).body
+      resp = Net::HTTP.get_response(URI.parse(url))
+      if resp.code =~ /2\d\d/
+        xml = resp.body
 
-      p = Hash.from_xml(xml)['person']
-      name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
-      database.set "prof:#{dozent}", name
-      database.expire "prof:#{dozent}", 60*60*24*5 #delete keys after five day
-      return name
+        p = Hash.from_xml(xml)['person']
+        name = "#{p['title']} #{p['firstname']} #{p['lastname']}"
+        database.set "prof:#{dozent}", name
+        database.expire "prof:#{dozent}", 60*60*24*5 #delete keys after five day
+        return name
+      end
+      return dozent
     end
   end
 
